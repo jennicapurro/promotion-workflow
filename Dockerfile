@@ -1,17 +1,23 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+# ── Production image ──────────────────────────────────────────────────────────
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dependencies first (cached layer)
 COPY package*.json ./
 RUN npm ci --omit=dev
 
-# Copy source and build
-COPY . .
-RUN npm run build
-
-# Remove dev source after build
-RUN rm -rf src
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/templates ./templates
 
 EXPOSE 3000
 
