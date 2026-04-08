@@ -9,6 +9,6 @@ COPY src/ ./src/
 COPY templates/ ./templates/
 COPY tsconfig.json ./
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["node_modules/.bin/ts-node", "--transpile-only", "src/app.ts"]
