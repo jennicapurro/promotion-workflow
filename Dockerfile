@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 
@@ -7,6 +7,7 @@ RUN npm install --production
 
 COPY src/ ./src/
 COPY templates/ ./templates/
+COPY tsconfig.json ./
 
 EXPOSE 8080
 
