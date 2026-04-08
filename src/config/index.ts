@@ -30,7 +30,7 @@ function optional(name: string, fallback: string): string {
 export const config = {
   app: {
     env: optional('NODE_ENV', 'development'),
-    port: parseInt(optional('PORT', '3000'), 10),
+    port: parseInt(optional('PORT', '8080'), 10),
     logLevel: optional('LOG_LEVEL', 'info'),
     baseUrl: require('APP_BASE_URL'),
   },
