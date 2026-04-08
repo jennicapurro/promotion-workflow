@@ -24,7 +24,7 @@
  * with routing order 3.
  */
 
-import docusign from 'docusign-esign';
+import * as docusign from 'docusign-esign';
 import { getDocuSignClient, invalidateTokenCache } from './client';
 import { config } from '../config';
 import { logger } from '../utils/logger';

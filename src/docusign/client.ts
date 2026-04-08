@@ -21,7 +21,7 @@
  * After consent is granted, JWT auth works without any user interaction.
  */
 
-import docusign from 'docusign-esign';
+import * as docusign from 'docusign-esign';
 import { config } from '../config';
 import { logger } from '../utils/logger';
 

@@ -13,7 +13,7 @@
  * returned from the callback without closing the modal.
  */
 
-import { App, ViewSubmitAction, BlockAction } from '@slack/bolt';
+import { App } from '@slack/bolt';
 import { generateCorrelationId } from '../utils/correlation';
 import { claimKey, updateKey } from '../utils/idempotency';
 import { logger, childLogger } from '../utils/logger';
