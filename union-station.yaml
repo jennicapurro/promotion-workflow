@@ -1,0 +1,54 @@
+# union-station.yaml
+#
+# Deployment configuration for Union Station (internal hosting).
+# Adjust resource limits and replica count based on your platform's conventions.
+# All secrets should be managed through Union Station's secret/env-var manager —
+# never store them in this file.
+
+name: promotion-workflow
+runtime: node
+nodeVersion: "20"
+
+build:
+  command: npm ci && npm run build
+  outputDir: dist
+
+start:
+  command: node dist/app.js
+
+environment:
+  # All secrets (Slack tokens, DocuSign keys, signer emails, etc.) are managed
+  # entirely through Union Station's secret management UI. Do not list them here.
+  # See .env.example for the full variable reference.
+  vars:
+    NODE_ENV: production
+    LOG_LEVEL: info
+
+health:
+  path: /health
+  interval: 30s
+  timeout: 5s
+
+resources:
+  memory: 512Mi
+  cpu: 0.5
+
+# Single replica is fine — the in-memory idempotency store is per-process.
+# If you need multiple replicas, replace idempotency.ts with a Redis-backed store.
+replicas: 1
+
+networking:
+  port: 3000
+  # Union Station should expose this service at the URL set in APP_BASE_URL
+  ingressPaths:
+    - /slack/events     # Slack events (handled by Bolt receiver)
+    - /docusign/webhook # DocuSign Connect callbacks
+    - /health           # Health check
+
+volumes:
+  # Mount a persistent volume at the local storage base path.
+  # Only needed when STORAGE_PROVIDER=local.
+  - name: employee-files
+    mountPath: /var/data/employee-files
+    size: 10Gi
+    type: persistent

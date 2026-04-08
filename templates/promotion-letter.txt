@@ -1,0 +1,52 @@
+{{COMPANY_NAME}}
+{{COMPANY_ADDRESS}}
+
+{{LETTER_DATE}}
+
+{{EMPLOYEE_NAME}}
+[Via DocuSign]
+
+Dear {{EMPLOYEE_NAME}},
+
+Subject: Promotion to {{NEW_TITLE}}
+
+On behalf of {{COMPANY_NAME}}, I am pleased to inform you of your promotion to the position of {{NEW_TITLE}}, effective {{EFFECTIVE_DATE}}.
+
+This promotion reflects our recognition of your outstanding contributions, dedication, and the exceptional work you have delivered. We are confident in your continued growth and the value you bring to our team.
+
+COMPENSATION & EQUITY
+
+Your updated compensation package is as follows:
+
+  Base Salary:      ${{NEW_SALARY_FORMATTED}} per year
+  Equity / Grant:   {{EQUITY_DETAILS}}
+
+All other terms and conditions of your employment remain unchanged. Your updated compensation will be reflected in your payroll beginning on or around {{EFFECTIVE_DATE}}.
+
+NEXT STEPS
+
+Please review this letter carefully. By signing below, you acknowledge receipt of this promotion and the compensation details outlined above. Your manager, {{MANAGER_NAME}}, will be your primary point of contact for any questions regarding this transition.
+
+We are proud of what you have accomplished and excited about the future ahead. Congratulations on this well-deserved promotion.
+
+Sincerely,
+
+___________________________
+{{MANAGER_NAME}}
+Manager
+{{COMPANY_NAME}}
+
+
+___________________________
+Alex Bovee
+[Authorized Signatory]
+{{COMPANY_NAME}}
+
+
+EMPLOYEE ACKNOWLEDGEMENT
+
+I, {{EMPLOYEE_NAME}}, acknowledge receipt of this promotion letter and the compensation details described above.
+
+___________________________
+{{EMPLOYEE_NAME}}
+Date: ___________________

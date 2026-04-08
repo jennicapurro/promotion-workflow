@@ -1,0 +1,35 @@
+{
+  "name": "promotion-workflow",
+  "version": "1.0.0",
+  "description": "Internal Slack-triggered promotion workflow with DocuSign integration",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "lint": "eslint src/**/*.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@slack/bolt": "^3.19.0",
+    "@slack/web-api": "^7.3.0",
+    "docusign-esign": "^6.4.0",
+    "express": "^4.19.2",
+    "pdfkit": "^0.15.0",
+    "winston": "^3.13.0",
+    "uuid": "^10.0.0",
+    "dotenv": "^16.4.5",
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.0",
+    "@types/pdfkit": "^0.13.4",
+    "@types/uuid": "^10.0.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
