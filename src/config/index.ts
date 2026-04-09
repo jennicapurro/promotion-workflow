@@ -1,21 +1,17 @@
 /**
  * config/index.ts
  *
- * Centralised configuration loader. Reads from environment variables (set via
- * Union Station's env var management or a local .env file in development).
- *
- * All required variables are validated at startup — the process exits immediately
- * if any are missing so failures surface clearly at deploy time, not at runtime.
+ * Only Slack vars are required at startup (needed to boot the server).
+ * DocuSign, Google Drive, and signer vars are optional here and validated
+ * at the point of use so the app starts and responds to Slack even while
+ * credentials are still being configured.
  */
 
-// Load .env only in local development. On Union Station, secrets are injected
-// directly as environment variables by the platform — no .env file is present
-// or needed in deployed environments.
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-function require(name: string): string {
+function requireAtBoot(name: string): string {
   const value = process.env[name];
   if (!value) {
     throw new Error(`Missing required environment variable: ${name}`);
@@ -23,7 +19,7 @@ function require(name: string): string {
   return value;
 }
 
-function optional(name: string, fallback: string): string {
+function optional(name: string, fallback = ''): string {
   return process.env[name] ?? fallback;
 }
 
@@ -32,45 +28,41 @@ export const config = {
     env: optional('NODE_ENV', 'development'),
     port: parseInt(optional('PORT', '3000'), 10),
     logLevel: optional('LOG_LEVEL', 'info'),
-    baseUrl: require('APP_BASE_URL'),
+    baseUrl: optional('APP_BASE_URL', ''),
   },
 
   slack: {
-    botToken: require('SLACK_BOT_TOKEN'),
-    signingSecret: require('SLACK_SIGNING_SECRET'),
-    /** Jenni's Slack user ID — the only authorized initiator */
-    authorizedUserId: require('JENNI_SLACK_USER_ID'),
+    botToken: requireAtBoot('SLACK_BOT_TOKEN'),
+    signingSecret: requireAtBoot('SLACK_SIGNING_SECRET'),
+    authorizedUserId: requireAtBoot('JENNI_SLACK_USER_ID'),
   },
 
   docusign: {
-    integrationKey: require('DOCUSIGN_INTEGRATION_KEY'),
-    accountId: require('DOCUSIGN_ACCOUNT_ID'),
-    basePath: require('DOCUSIGN_BASE_PATH'),
-    oauthBasePath: require('DOCUSIGN_OAUTH_BASE_PATH'),
-    impersonationUserId: require('DOCUSIGN_IMPERSONATION_USER_ID'),
-    /** Base64-encoded RSA private key for JWT grant */
-    privateKeyBase64: require('DOCUSIGN_PRIVATE_KEY_BASE64'),
-    /** HMAC key for validating DocuSign Connect webhook signatures */
-    webhookHmacKey: optional('DOCUSIGN_WEBHOOK_HMAC_KEY', ''),
+    integrationKey: optional('DOCUSIGN_INTEGRATION_KEY'),
+    accountId: optional('DOCUSIGN_ACCOUNT_ID'),
+    basePath: optional('DOCUSIGN_BASE_PATH', 'https://demo.docusign.net/restapi'),
+    oauthBasePath: optional('DOCUSIGN_OAUTH_BASE_PATH', 'account-d.docusign.com'),
+    impersonationUserId: optional('DOCUSIGN_IMPERSONATION_USER_ID'),
+    privateKeyBase64: optional('DOCUSIGN_PRIVATE_KEY_BASE64'),
+    webhookHmacKey: optional('DOCUSIGN_WEBHOOK_HMAC_KEY'),
   },
 
   signers: {
     alexBovee: {
-      email: require('ALEX_BOVEE_EMAIL'),
-      name: require('ALEX_BOVEE_NAME'),
+      email: optional('ALEX_BOVEE_EMAIL'),
+      name: optional('ALEX_BOVEE_NAME', 'Alex Bovee'),
     },
   },
 
+  googleDrive: {
+    serviceAccountJson: optional('GOOGLE_SERVICE_ACCOUNT_JSON'),
+    templateFileId: optional('GOOGLE_PROMOTION_TEMPLATE_ID'),
+    employeesFolderId: optional('GOOGLE_EMPLOYEES_FOLDER_ID'),
+  },
+
   storage: {
-    provider: optional('STORAGE_PROVIDER', 'local') as 'local' | 's3',
+    provider: optional('STORAGE_PROVIDER', 'local') as 'local' | 's3' | 'gdrive',
     localBasePath: optional('STORAGE_LOCAL_BASE_PATH', '/var/data/employee-files'),
-    s3: {
-      bucket: optional('S3_BUCKET', ''),
-      region: optional('S3_REGION', 'us-east-1'),
-      accessKeyId: optional('S3_ACCESS_KEY_ID', ''),
-      secretAccessKey: optional('S3_SECRET_ACCESS_KEY', ''),
-      keyPrefix: optional('S3_KEY_PREFIX', 'employee-files/'),
-    },
   },
 } as const;
 
